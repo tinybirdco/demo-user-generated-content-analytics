@@ -1,0 +1,18 @@
+TOKEN "my_top_tracks_endpoint_read_5494" READ
+
+NODE endpoint
+SQL >
+
+    %
+        SELECT
+          JSONExtractString(message, 'sub_property_id') AS sub_property_id,
+          JSONExtractString(message, 'asset_id') AS asset_id,
+          JSONExtractString(message, 'video_title') AS video_title,
+          count() AS c
+        FROM parse_events
+        GROUP BY sub_property_id, asset_id, video_title
+        ORDER BY c DESC
+        LIMIT {{UInt16(page_size, 5)}}
+        OFFSET {{UInt16(page, 0) * UInt16(page_size, 5)}}
+
+

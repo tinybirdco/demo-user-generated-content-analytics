@@ -1,0 +1,35 @@
+TOKEN "real_time_listeners_endpoint_read_7887" READ
+
+NODE time_series
+SQL >
+
+    %
+        WITH toDateTime(date_sub(SECOND, {{UInt16(lookback_seconds, 60)}}, toDateTime(now()))) AS start
+        SELECT addSeconds(toDateTime(start), number) AS ts
+        FROM (
+            SELECT arrayJoin(range(0, {{UInt16(lookback_seconds, 60)}})) AS number
+        )
+
+
+
+NODE counts
+SQL >
+
+    SELECT
+      parseDateTimeBestEffort((JSONExtractString(message, 'view_start'))) AS s,
+      count() AS c
+    FROM parse_events
+    GROUP BY s
+
+
+
+NODE endpoint
+SQL >
+
+    SELECT
+     a.ts,
+     b.c
+    FROM time_series a
+    LEFT JOIN counts b ON b.s = a.ts
+
+

@@ -1,0 +1,30 @@
+TOKEN "plays_per_day_endpoint_read_9909" READ
+
+NODE time_series
+SQL >
+
+    %
+        WITH toDate(date_sub(DAY, 6, today())) AS start
+        SELECT addDays(start, number) AS ts
+        FROM (
+            SELECT arrayJoin(range(0, 7)) AS number
+        )
+
+
+
+NODE endpoint
+SQL >
+
+    %
+        SELECT 
+          toDate(parseDateTimeBestEffort(JSONExtractString(message, 'view_start'))) AS d,
+          {% if defined(asset_ids) %}JSONExtractString(message, 'video_title') AS video_title,{% end %}
+          count() AS c
+        FROM parse_events
+        WHERE 1
+        {% if defined(asset_ids) %} 
+            AND JSONExtractString(message, 'asset_id') IN {{Array(asset_ids, 'String', 'TY4WPz00HLY9zdPo6DSXxElWxi3BSY1pYugQUHJay00hA')}}
+        {% end %}
+        GROUP BY d{% if defined(asset_ids) %}, video_title{% end %}
+
+
