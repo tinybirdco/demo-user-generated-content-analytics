@@ -4,15 +4,18 @@ NODE endpoint
 SQL >
 
     %
-        SELECT
-          JSONExtractString(message, 'sub_property_id') AS sub_property_id,
-          JSONExtractString(message, 'asset_id') AS asset_id,
-          JSONExtractString(message, 'video_title') AS video_title,
-          count() AS c
-        FROM parse_events
-        GROUP BY sub_property_id, asset_id, video_title
-        ORDER BY c DESC
-        LIMIT {{UInt16(page_size, 5)}}
-        OFFSET {{UInt16(page, 0) * UInt16(page_size, 5)}}
+    SELECT
+        JSONExtractString(message, 'sub_property_id') AS sub_property_id,
+        JSONExtractString(message, 'asset_id') AS asset_id,
+        JSONExtractString(message, 'video_title') AS video_title,
+        count() AS c
+    FROM parse_events
+    WHERE
+        kinesis_ts BETWEEN toDateTime(parseDateTimeBestEffort({{ String(start_datetime, '2024-01-01T00:00:00Z') }}))
+        and toDateTime(parseDateTimeBestEffort({{ String(end_datetime, '2025-01-01T00:00:00Z') }}))
+    GROUP BY sub_property_id, asset_id, video_title
+    ORDER BY c DESC
+    LIMIT {{ UInt16(page_size, 5) }}
+    OFFSET {{ UInt16(page, 0) * UInt16(page_size, 5) }}
 
 

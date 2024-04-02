@@ -3,13 +3,18 @@ TOKEN "top_locations_endpoint_read_5393" READ
 NODE locations
 SQL >
 
+    %
     SELECT
+      JSONExtractString(message, 'sub_property_id') AS sub_property_id,
       JSONExtractString(message, 'country') AS country_code,
       JSONExtractString(message, 'country_name') AS country,
       JSONExtractString(message, 'region') AS region,
       JSONExtractString(message, 'city') AS city,
       JSONExtractString(message, 'view_id') AS view_id
     FROM parse_events
+    WHERE
+        kinesis_ts BETWEEN toDateTime(parseDateTimeBestEffort({{ String(start_datetime, '2024-01-01T00:00:00Z') }}))
+        and toDateTime(parseDateTimeBestEffort({{ String(end_datetime, '2025-01-01T00:00:00Z') }}))
 
 
 

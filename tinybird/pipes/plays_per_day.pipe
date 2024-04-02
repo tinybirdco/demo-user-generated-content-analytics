@@ -4,11 +4,11 @@ NODE time_series
 SQL >
 
     %
-        WITH toDate(date_sub(DAY, 6, today())) AS start
-        SELECT addDays(start, number) AS ts
-        FROM (
-            SELECT arrayJoin(range(0, 7)) AS number
-        )
+    WITH
+        toDateTime(parseDateTimeBestEffort({{ String(start_datetime, '2024-01-01T00:00:00Z') }})) AS start_,
+        toDateTime(parseDateTimeBestEffort({{ String(end_datetime, '2025-01-01T00:00:00Z') }})) AS end_,
+        arrayJoin(range(0, age('day', start_, end_), 1)) AS number
+    SELECT addDays(start_, number) AS ts
 
 
 
@@ -16,6 +16,7 @@ NODE endpoint
 SQL >
 
     %
+    {% set asset_ids='WucdG9TaHOoaCJR2ZLIwiQ01o7tb02sHvBunIss02bXLUA' %}
         SELECT 
           toDate(parseDateTimeBestEffort(JSONExtractString(message, 'view_start'))) AS d,
           {% if defined(asset_ids) %}JSONExtractString(message, 'video_title') AS video_title,{% end %}
@@ -23,7 +24,7 @@ SQL >
         FROM parse_events
         WHERE 1
         {% if defined(asset_ids) %} 
-            AND JSONExtractString(message, 'asset_id') IN {{Array(asset_ids, 'String', 'TY4WPz00HLY9zdPo6DSXxElWxi3BSY1pYugQUHJay00hA')}}
+            AND JSONExtractString(message, 'asset_id') IN {{Array(asset_ids, 'String', '2b78f89a-8fd0-4b89-9fd6-20c5c3bb2c68')}}
         {% end %}
         GROUP BY d{% if defined(asset_ids) %}, video_title{% end %}
 
