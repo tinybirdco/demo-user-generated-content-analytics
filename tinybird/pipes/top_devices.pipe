@@ -1,0 +1,17 @@
+TOKEN "top_devices_endpoint_read_7442" READ
+
+NODE endpoint
+SQL >
+
+    %
+    SELECT 
+      JSONExtractString(message, 'sub_property_id') AS sub_property_id,
+      JSONExtractString(message, 'viewer_device_category') AS device, 
+      count(message) AS c
+    FROM parse_events
+    WHERE
+        kinesis_ts BETWEEN toDateTime(parseDateTimeBestEffort({{ String(start_datetime, '2024-01-01T00:00:00Z') }}))
+        and toDateTime(parseDateTimeBestEffort({{ String(end_datetime, '2025-01-01T00:00:00Z') }}))
+    GROUP by sub_property_id, device
+
+

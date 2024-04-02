@@ -1,0 +1,12 @@
+TOKEN "parse_events_endpoint_read_3154" READ
+
+NODE endpoint
+SQL >
+
+    SELECT
+        base64Decode(encoded_m) message,
+        fromUnixTimestamp64Milli(timestamp) kinesis_ts
+    FROM mux_data
+    ARRAY JOIN records__data as encoded_m
+
+

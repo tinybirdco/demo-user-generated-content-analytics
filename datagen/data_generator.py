@@ -8,6 +8,7 @@ from datetime import datetime, timedelta
 import sys
 from time import sleep
 import base64
+import csv
 
 fake = Faker()
 
@@ -21,6 +22,17 @@ with open('../tinybird/.tinyb') as tinyb:
     TB_TOKEN = data.get('token')
     TB_HOST = data.get('host')
 
+with open('sub_property_ids.txt', 'r') as sub_prop_id_file:
+    SUB_PROPERTY_IDS = sub_prop_id_file.read().splitlines()
+
+TRACKS = {}
+with open('tracks.csv', 'r') as tracks_file:
+    reader = csv.DictReader(tracks_file)
+    for row in reader:
+        asset_id = row['asset_id']
+        video_title = row['video_title']
+        TRACKS[asset_id] = [video_title]
+
 
 def generate_events(eps):
     ts = datetime.utcnow()
@@ -30,6 +42,9 @@ def generate_events(eps):
 
     data = []
     for _ in range(eps):
+        asset_id = random.choice(list(TRACKS.keys()))
+        video_title = TRACKS[asset_id][0]
+
         event = {
             "view_id": str(uuid4()),
             "property_id": str(random.randint(207000, 208000)),
@@ -205,7 +220,7 @@ def generate_events(eps):
             "source_hostname": "stream.mux.com",
             "source_type": "application/x-mpegurl",
             "startup_time_score": 0.9805123,
-            "sub_property_id": None,
+            "sub_property_id": random.choice(SUB_PROPERTY_IDS),
             "used_fullscreen": False,
             "video_content_type": None,
             "video_duration": None,
@@ -216,7 +231,7 @@ def generate_events(eps):
             "video_quality_score": 1,
             "video_series": None,
             "video_startup_time": 159,
-            "video_title": fake.catch_phrase(),
+            "video_title": video_title,
             "video_variant_id": None,
             "video_variant_name": None,
             "view_downscaling_percentage": None,
@@ -231,7 +246,7 @@ def generate_events(eps):
             "view_upscaling_percentage": None,
             "viewer_application_engine": "122.0.0.0",
             "viewer_connection_type": None,
-            "viewer_device_category": random.choices(["desktop", "mobile"], weights=[25, 75])[0],
+            "viewer_device_category": random.choices(["desktop", "phone", "car browser", "tablet", "tv", "wearable", "portable media player", "camera", "console", "feature phone", "peripheral", "smart display", "smart speaker"], weights=[100, 50, 40, 30, 25, 11, 6, 9, 4, 1, 2, 1, 3])[0],
             "viewer_device_manufacturer": random.choice(["Apple", "Dell", "Asus"]),
             "viewer_device_name": None,
             "viewer_experience_score": 0.9932768,
@@ -253,7 +268,7 @@ def generate_events(eps):
             "request_throughput": 102460036,
             "stream_type": "on-demand",
             "video_experiments_arr": [],
-            "asset_id": "WucdG9TaHOoaCJR2ZLIwiQ01o7tb02sHvBunIss02bXLUA",
+            "asset_id": asset_id,
             "live_stream_id": None,
             "playback_id": "TY4WPz00HLY9zdPo6DSXxElWxi3BSY1pYugQUHJay00hA",
             "live_stream_latency": None,
