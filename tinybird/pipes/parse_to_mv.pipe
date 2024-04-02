@@ -1,0 +1,31 @@
+NODE decode_data
+SQL >
+
+    SELECT base64Decode(encoded_m) message, fromUnixTimestamp64Milli(timestamp) kinesis_ts
+    FROM mux_data ARRAY
+    JOIN records__data as encoded_m
+
+
+
+NODE parse_to_mv_1
+SQL >
+
+    SELECT
+      JSONExtractString(message, 'view_id') AS view_id,
+      JSONExtractString(message, 'sub_property_id') AS sub_property_id,
+      JSONExtractString(message, 'video_title') AS video_title,
+      JSONExtractString(message, 'asset_id') AS asset_id,
+      JSONExtractString(message, 'country') AS country_code,
+      JSONExtractString(message, 'country_name') AS country,
+      JSONExtractString(message, 'region') AS region,
+      JSONExtractString(message, 'city') AS city,
+      JSONExtractString(message, 'viewer_device_category') AS device,
+      parseDateTime64BestEffort(JSONExtractString(message, 'view_start'), 3, 'UTC') AS view_start,
+      parseDateTime64BestEffort(JSONExtractString(message, 'view_end'), 3, 'UTC') AS view_end,
+      JSONExtractArrayRaw(message, 'events') AS events
+    FROM decode_data
+
+TYPE materialized
+DATASOURCE core_stats_mv
+
+

@@ -1,0 +1,19 @@
+# Data Source created from Pipe 'parse_to_mv'
+
+SCHEMA >
+    `view_id` String,
+    `sub_property_id` String,
+    `video_title` String,
+    `asset_id` String,
+    `country_code` String,
+    `country` String,
+    `region` String,
+    `city` String,
+    `device` String,
+    `view_start` DateTime64(3, 'UTC'),
+    `view_end` DateTime64(3, 'UTC'),
+    `events` Array(String)
+
+ENGINE "MergeTree"
+ENGINE_PARTITION_KEY "toYYYYMM(view_start)"
+ENGINE_SORTING_KEY "sub_property_id, view_start"

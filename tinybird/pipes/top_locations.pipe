@@ -1,19 +1,21 @@
 TOKEN "top_locations_endpoint_read_5393" READ
 
+TOKEN "sub_property_id_1afd14c1-d046-452f-92c9-1cbb4427becb_read" READ
+
 NODE locations
 SQL >
 
     %
     SELECT
-      JSONExtractString(message, 'sub_property_id') AS sub_property_id,
-      JSONExtractString(message, 'country') AS country_code,
-      JSONExtractString(message, 'country_name') AS country,
-      JSONExtractString(message, 'region') AS region,
-      JSONExtractString(message, 'city') AS city,
-      JSONExtractString(message, 'view_id') AS view_id
-    FROM parse_events
+      sub_property_id,
+      country_code,
+      country,
+      region,
+      city,
+      view_id
+    FROM core_stats_mv
     WHERE
-        kinesis_ts BETWEEN toDateTime(parseDateTimeBestEffort({{ String(start_datetime, '2024-01-01T00:00:00Z') }}))
+        view_start BETWEEN toDateTime(parseDateTimeBestEffort({{ String(start_datetime, '2024-01-01T00:00:00Z') }}))
         and toDateTime(parseDateTimeBestEffort({{ String(end_datetime, '2025-01-01T00:00:00Z') }}))
 
 
