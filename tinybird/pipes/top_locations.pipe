@@ -2,6 +2,8 @@ TOKEN "top_locations_endpoint_read_5393" READ
 
 TOKEN "sub_property_id_1afd14c1-d046-452f-92c9-1cbb4427becb_read" READ
 
+TOKEN "sub_property_id_021d3c9f-df52-470d-b360-7af83bd67789_read" READ
+
 NODE locations
 SQL >
 
@@ -29,5 +31,6 @@ SQL >
           count(view_id) AS c
         FROM locations
         GROUP BY {{column(location_group, 'country')}}
+        ORDER BY c DESC
 
 
