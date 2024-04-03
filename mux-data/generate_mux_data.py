@@ -40,8 +40,8 @@ def generate_events(eps):
     for _ in range(events):
         ts = datetime.utcnow()
         d = random.randint(30, 360)
-        sub_property_id = random.choice(SUB_PROPERTY_IDS)
-        track_weights = list(int((x+1) ** 1.2) for x in range(len(TRACKS)))
+        sub_property_id = random.choice(SUB_PROPERTY_IDS[:200])
+        track_weights = list(int((x+1) ** 2) for x in range(len(TRACKS)))
 
         # Do some different things for our sub_property_ids of interest
         if sub_property_id == '1afd14c1-d046-452f-92c9-1cbb4427becb':
