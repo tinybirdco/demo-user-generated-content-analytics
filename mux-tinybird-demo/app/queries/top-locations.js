@@ -1,9 +1,9 @@
-export default async function topLocations() {
+export default async function topLocations(token) {
     let url = new URL(`https://api.us-east.aws.tinybird.co/v0/pipes/top_locations.json`)
 
     const result = await fetch(url, {
         headers: {
-            Authorization: 'Bearer p.eyJ1IjogImE0OTBkM2VhLWNhZTYtNDRhYi05ZTEwLWI1MDAzYWY5MmY0MyIsICJpZCI6ICI3YjY0MzlmMy00N2QyLTQzMDgtYjFlNS1jOWQ3OGRjZTI4ZDAiLCAiaG9zdCI6ICJ1cy1lYXN0LWF3cyJ9.NrPS6dLScpDblHgyUQlzvpY7vvLlHy7QKfdNxR76aDo'
+            Authorization: `Bearer ${token}`
         }
     })
         .then(r => r.json())
