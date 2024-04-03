@@ -1,4 +1,4 @@
-# Build multi-tenant user-facing analytics for a User-Generated Content (UGC) Platform
+# Build multi-tenant user-facing analytics for a User-Generated Content (UGC) Platform with Mux and Tinybird
 Learn how to build a real-time analytics app that processes playback data from Mux in Tinybird and visualizes that data in real-time on a React dashboard.
 
 ### Prerequisites
@@ -59,8 +59,8 @@ This will push all of the data project files to the Tinybird server.
 Use the data generator to start streaming data to a topic. The script accepts a single argument for the approximate number of events per second you want to send:
 
 ```sh
-cd datagen
-python data_generatory.py 50
+cd mux-data
+python generate_mux_data.py 50
 ```
 
 ### 6. Edit the dashboard code
