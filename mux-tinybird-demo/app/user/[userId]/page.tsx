@@ -13,14 +13,23 @@ import realTimeListeners from "@/app/queries/real-time-listeners";
 
 export const dynamic = 'force-dynamic'
 
+const TOKENS = {
+    "021d3c9f-df52-470d-b360-7af83bd67789": "p.eyJ1IjogImE0OTBkM2VhLWNhZTYtNDRhYi05ZTEwLWI1MDAzYWY5MmY0MyIsICJpZCI6ICJlZGUyZWQzNi03OTdiLTQ3ZDMtODkyOC01MzY5MGQ3ZjFlNTgiLCAiaG9zdCI6ICJ1cy1lYXN0LWF3cyJ9._7oHiV7k4y-WlenhYGmzabllO0noP0ozQmPh03K0Lmc",
+    "1afd14c1-d046-452f-92c9-1cbb4427becb": "p.eyJ1IjogImE0OTBkM2VhLWNhZTYtNDRhYi05ZTEwLWI1MDAzYWY5MmY0MyIsICJpZCI6ICIwMTYyMjUzNS1mNjA2LTQzMDMtYTM5OS0yODJjOGI0OTA3NDAiLCAiaG9zdCI6ICJ1cy1lYXN0LWF3cyJ9.CpAjSq_9KzOC8xmdS4AuUONCr1_duTUdKWI3Hm4DQE8",
+}
+
 export default async function UserDashboard({ params }: { params: { userId: string } }) {
-    const playsPerDayResult = await playsPerDay();
+    // @ts-ignore
+    // const token = TOKENS[params.userId];
+    const token = TOKENS["1afd14c1-d046-452f-92c9-1cbb4427becb"];
+    // const token = TOKENS["021d3c9f-df52-470d-b360-7af83bd67789"];
+    const playsPerDayResult = await playsPerDay(token);
 
     const [topDevicesResult, topTracksResult, topLocationsResult, realTimeListenersResult] = await Promise.all([
-        topDevices(),
-        topTracks(),
-        topLocations(),
-        realTimeListeners(),
+        topDevices(token),
+        topTracks(token),
+        topLocations(token),
+        realTimeListeners(token),
     ])
 
     console.log("playas per day")
@@ -32,7 +41,7 @@ export default async function UserDashboard({ params }: { params: { userId: stri
 
             <div className="grid grid-cols-12 gap-10 w-full my-10">
                 <div className="col-span-8">
-                    <PlaysPerDay />
+                    <PlaysPerDay data={playsPerDayResult.data} />
                     <TopLocations data={topLocationsResult.data} />
                 </div>
                 <div className="col-span-4">

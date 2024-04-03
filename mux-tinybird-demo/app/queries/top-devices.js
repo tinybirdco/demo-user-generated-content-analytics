@@ -1,10 +1,10 @@
-export default async function topDevices() {
+export default async function topDevices(token) {
     let url = new URL(`https://api.us-east.aws.tinybird.co/v0/pipes/top_devices.json`)
 
 
     const result = await fetch(url, {
         headers: {
-            Authorization: 'Bearer p.eyJ1IjogImE0OTBkM2VhLWNhZTYtNDRhYi05ZTEwLWI1MDAzYWY5MmY0MyIsICJpZCI6ICIwMTYyMjUzNS1mNjA2LTQzMDMtYTM5OS0yODJjOGI0OTA3NDAiLCAiaG9zdCI6ICJ1cy1lYXN0LWF3cyJ9.CpAjSq_9KzOC8xmdS4AuUONCr1_duTUdKWI3Hm4DQE8'
+            Authorization: `Bearer ${token}`
         }
     })
         .then(r => r.json())

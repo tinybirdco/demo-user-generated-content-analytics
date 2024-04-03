@@ -1,11 +1,11 @@
-export default async function topTracks() {
+export default async function topTracks(token) {
     let url = new URL(`https://api.us-east.aws.tinybird.co/v0/pipes/top_tracks.json`)
 
     url.searchParams.append('page_size', '5')
 
     const result = await fetch(url, {
         headers: {
-            Authorization: 'Bearer p.eyJ1IjogImE0OTBkM2VhLWNhZTYtNDRhYi05ZTEwLWI1MDAzYWY5MmY0MyIsICJpZCI6ICJkNzBiMGM2Mi1mOWQ0LTQ3YzYtYjEzMS1jNWIyNzJmZmI2NWMiLCAiaG9zdCI6ICJ1cy1lYXN0LWF3cyJ9.FbksuTJOWO2hZhGR3YA_85hrGR0CwuZlHkQfqFXyoCU'
+            Authorization: `Bearer ${token}`
         }
     })
         .then(r => r.json())
