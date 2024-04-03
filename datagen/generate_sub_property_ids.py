@@ -15,6 +15,6 @@ def write_uuids_to_file(uuids, filename):
 if __name__ == "__main__":
     num_uuids = 5000
     uuids = generate_uuids(num_uuids)
-    filename = "uuids.txt"
+    filename = "sub_property_ids.txt"
     write_uuids_to_file(uuids, filename)
     print(f"{num_uuids} UUIDs have been generated and written to {filename}.")

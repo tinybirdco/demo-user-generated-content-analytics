@@ -35,15 +35,27 @@ with open('tracks.csv', 'r') as tracks_file:
 
 
 def generate_events(eps):
-    ts = datetime.utcnow()
-    d = random.randint(30, 360)
-    country = random.choices(list(range(10)), weights=[
-                             100, 50, 35, 45, 27, 12, 5, 6, 12, 3])[0]
-
     data = []
-    for _ in range(eps):
-        asset_id = random.choice(list(TRACKS.keys()))
-        video_title = TRACKS[asset_id][0]
+    events = random.randint(int(eps*0.75), int(eps*1.25))
+    for _ in range(events):
+        ts = datetime.utcnow()
+        d = random.randint(30, 360)
+        sub_property_id = random.choice(SUB_PROPERTY_IDS)
+        track_weights = list(int((x+1) ** 1.2) for x in range(len(TRACKS)))
+
+        # Do some different things for our sub_property_ids of interest
+        if sub_property_id == '1afd14c1-d046-452f-92c9-1cbb4427becb':
+            country = random.choices(list(range(10)), weights=[
+                100, 50, 35, 45, 27, 12, 5, 6, 12, 3])[0]
+            asset_id = random.choices(
+                list(TRACKS.keys()), weights=track_weights)[0]
+            video_title = TRACKS[asset_id][0]
+        else:
+            country = random.choices(list(range(10)), weights=[
+                50, 20, 100, 6, 3, 1, 15, 4, 2, 0])[0]
+            asset_id = random.choices(
+                list(TRACKS.keys()), weights=track_weights[::-1])[0]
+            video_title = TRACKS[asset_id][0]
 
         event = {
             "view_id": str(uuid4()),
@@ -220,7 +232,7 @@ def generate_events(eps):
             "source_hostname": "stream.mux.com",
             "source_type": "application/x-mpegurl",
             "startup_time_score": 0.9805123,
-            "sub_property_id": random.choice(SUB_PROPERTY_IDS),
+            "sub_property_id": sub_property_id,
             "used_fullscreen": False,
             "video_content_type": None,
             "video_duration": None,
@@ -337,4 +349,4 @@ if __name__ == '__main__':
     while True:
         payload = generate_events(eps)
         send_to_tinybird(payload)
-        sleep(1)
+        sleep(0.25)
