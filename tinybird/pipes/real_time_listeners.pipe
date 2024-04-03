@@ -2,6 +2,8 @@ TOKEN "real_time_listeners_endpoint_read_7887" READ
 
 TOKEN "sub_property_id_1afd14c1-d046-452f-92c9-1cbb4427becb_read" READ
 
+TOKEN "sub_property_id_021d3c9f-df52-470d-b360-7af83bd67789_read" READ
+
 NODE time_series
 SQL >
 
@@ -15,25 +17,14 @@ SQL >
 
 
 
-NODE last_60_seconds_data
-SQL >
-
-    SELECT
-        base64Decode(encoded_m) message,
-        fromUnixTimestamp64Milli(timestamp) kinesis_ts
-    FROM mux_data
-    ARRAY JOIN records__data as encoded_m
-    WHERE timestamp >= toUnixTimestamp64Milli(now64(3, 'UTC')) - 60000
-
-
-
 NODE counts
 SQL >
 
     SELECT
-      parseDateTimeBestEffort(JSONExtractString(message, 'view_end')) AS s,
+      toDateTime(view_end, 'UTC') AS s,
       count() AS c
-    FROM last_60_seconds_data
+    FROM core_stats_mv
+    WHERE view_start >= now() - INTERVAL 10 minute
     GROUP BY s
     ORDER BY s DESC
 
