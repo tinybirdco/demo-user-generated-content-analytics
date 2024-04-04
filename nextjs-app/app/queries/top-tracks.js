@@ -1,7 +1,7 @@
 export default async function topTracks(token) {
     let url = new URL(`https://api.us-east.aws.tinybird.co/v0/pipes/top_tracks.json`)
 
-    url.searchParams.append('page_size', '5')
+    url.searchParams.append('page_size', '8')
 
     const result = await fetch(url, {
         headers: {
