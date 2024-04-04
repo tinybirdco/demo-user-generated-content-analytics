@@ -18,26 +18,28 @@ const TOKENS = {
     "1afd14c1-d046-452f-92c9-1cbb4427becb": "p.eyJ1IjogImE0OTBkM2VhLWNhZTYtNDRhYi05ZTEwLWI1MDAzYWY5MmY0MyIsICJpZCI6ICIwMTYyMjUzNS1mNjA2LTQzMDMtYTM5OS0yODJjOGI0OTA3NDAiLCAiaG9zdCI6ICJ1cy1lYXN0LWF3cyJ9.CpAjSq_9KzOC8xmdS4AuUONCr1_duTUdKWI3Hm4DQE8",
 }
 
+const USERS = {
+    "021d3c9f-df52-470d-b360-7af83bd67789": "Dave",
+    "1afd14c1-d046-452f-92c9-1cbb4427becb": "Cameron",
+}
+
 export default async function UserDashboard({ params }: { params: { userId: string } }) {
     // @ts-ignore
-    // const token = TOKENS[params.userId];
-    const token = TOKENS["1afd14c1-d046-452f-92c9-1cbb4427becb"];
-    // const token = TOKENS["021d3c9f-df52-470d-b360-7af83bd67789"];
-    const playsPerDayResult = await playsPerDay(token);
+    const token = TOKENS[params.userId];
+    // @ts-ignore
+    const userName = USERS[params.userId];
 
-    const [topDevicesResult, topTracksResult, topLocationsResult, realTimeListenersResult] = await Promise.all([
+    const [playsPerDayResult, topDevicesResult, topTracksResult, topLocationsResult, realTimeListenersResult] = await Promise.all([
+        playsPerDay(token),
         topDevices(token),
         topTracks(token),
         topLocations(token),
         realTimeListeners(token),
     ])
 
-    console.log("playas per day")
-    console.log(playsPerDayResult)
-
     return (
         <main className="flex min-h-screen flex-col items-center justify-between p-24 w-full">
-            <h1 className="text-6xl font-bold">Dashboard for {params.userId}</h1>
+            <h1 className="text-6xl font-bold">Dashboard for {userName}</h1>
 
             <div className="grid grid-cols-12 gap-10 w-full my-10">
                 <div className="col-span-8">
@@ -49,7 +51,6 @@ export default async function UserDashboard({ params }: { params: { userId: stri
                     <TopTracks data={topTracksResult.data} />
                     <TopDevices data={topDevicesResult.data} />
                 </div>
-
             </div>
         </main>
     );
