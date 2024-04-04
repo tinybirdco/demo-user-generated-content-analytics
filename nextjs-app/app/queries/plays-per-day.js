@@ -1,8 +1,6 @@
 export default async function playsPerDay(token) {
     let url = new URL(`https://api.us-east.aws.tinybird.co/v0/pipes/plays_per_day.json`)
 
-    // url.searchParams.append('asset_ids', 'b03f525e-0853-4326-b1c0-3f12321443b1')
-
     const result = await fetch(url, {
         headers: {
             Authorization: `Bearer ${token}`
