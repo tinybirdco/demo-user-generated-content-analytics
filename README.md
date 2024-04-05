@@ -63,8 +63,9 @@ cd mux-data
 python generate_mux_data.py 50
 ```
 
-### 6. Edit the dashboard code
-#TODO
+### 6. Create tokens
+
+Find two tokens and use the `create-jwt.js` file to create two Tinybird tokens with row-level security on the `core_stats_mv` Data Source. Then add those tokens in lines 17 and 18 of the `users/[userId]/page.tsx` file.
 
 ### 7. Run the dashboard!
 
